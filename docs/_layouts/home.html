@@ -155,6 +155,7 @@
           
           <!-- include the title info. It's located in _includes/title_info.html -->
           {% include title_info.html %}
+          <center><p><span style="font-size:20px;">International Conference on Robotics and Automation (ICRA), 2024</span></p></center>
 
         </div>
       </div>
@@ -473,6 +474,11 @@
             document.getElementById('image1-4').src = imagePath1;
             document.getElementById('image2-4').src = imagePath2;
             document.getElementById('image3-4').src = imagePath3;
+
+
+            document.getElementById('image1-4').style.display = 'inline-block';
+            document.getElementById('image2-4').style.display = 'inline-block';
+            document.getElementById('image3-4').style.display = 'inline-block';
         });
     }
 
@@ -551,6 +557,10 @@
               document.getElementById('image1-4').src = imagePath1;
               document.getElementById('image2-4').src = imagePath2;
               document.getElementById('image3-4').src = imagePath3;
+
+              document.getElementById('image1-4').style.display = 'inline-block';
+              document.getElementById('image2-4').style.display = 'inline-block';
+              document.getElementById('image3-4').style.display = 'inline-block';
           });
 
           document.getElementById('highlight-toggle-4').addEventListener('change', function() {
@@ -745,6 +755,10 @@
               document.getElementById('image1').src = imagePath1;
               document.getElementById('image2').src = imagePath2;
               document.getElementById('image3').src = imagePath3;
+
+              document.getElementById('image1').style.display = 'inline-block';
+              document.getElementById('image2').style.display = 'inline-block';
+              document.getElementById('image3').style.display = 'inline-block';
           });
       }
 
@@ -825,6 +839,10 @@
               document.getElementById('image1').src = imagePath1;
               document.getElementById('image2').src = imagePath2;
               document.getElementById('image3').src = imagePath3;
+
+              document.getElementById('image1').style.display = 'inline-block';
+              document.getElementById('image2').style.display = 'inline-block';
+              document.getElementById('image3').style.display = 'inline-block';
           });
 
           document.getElementById('highlight-toggle').addEventListener('change', function() {
@@ -896,7 +914,7 @@
         'libero_goal/turn_on_the_stove_demo', 
         'libero_goal/put_the_bowl_on_the_plate_demo', 
         'libero_goal/put_the_wine_bottle_on_the_rack_demo']
-  
+
       function updatePlot2(selectedNumTasks) {
         // Filter points based on selectedNumTasks
         var filteredIndices2 = taskIds2.map((taskId, index) => taskId < selectedNumTasks ? index : -1).filter(index => index != -1);
@@ -993,6 +1011,11 @@
             document.getElementById('image1-2').src = imagePath1;
             document.getElementById('image2-2').src = imagePath2;
             document.getElementById('image3-2').src = imagePath3;
+
+
+            document.getElementById('image1-2').style.display = 'inline-block';
+            document.getElementById('image2-2').style.display = 'inline-block';
+            document.getElementById('image3-2').style.display = 'inline-block';
         });
     }
 
@@ -1071,6 +1094,10 @@
               document.getElementById('image1-2').src = imagePath1;
               document.getElementById('image2-2').src = imagePath2;
               document.getElementById('image3-2').src = imagePath3;
+
+              document.getElementById('image1-2').style.display = 'inline-block';
+              document.getElementById('image2-2').style.display = 'inline-block';
+              document.getElementById('image3-2').style.display = 'inline-block';
           });
 
           document.getElementById('highlight-toggle-2').addEventListener('change', function() {
@@ -1079,7 +1106,6 @@
           });
 
       });
-
 
     </script>
     <br>
@@ -1360,6 +1386,10 @@
               document.getElementById('image1-3').src = imagePath1;
               document.getElementById('image2-3').src = imagePath2;
               document.getElementById('image3-3').src = imagePath3;
+
+              document.getElementById('image1-3').style.display = 'inline-block';
+              document.getElementById('image2-3').style.display = 'inline-block';
+              document.getElementById('image3-3').style.display = 'inline-block';
           });
 
           document.getElementById('highlight-toggle-3').addEventListener('change', function() {

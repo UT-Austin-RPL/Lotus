@@ -289,3 +289,7 @@ padding: 0 40px;
   margin-top: 5px;
 }
 
+#image1, #image2, #image3, #image1-2, #image2-2, #image3-2, #image1-3, #image2-3, #image3-3, #image1-4, #image2-4, #image3-4 {
+  display: none;
+}
+
