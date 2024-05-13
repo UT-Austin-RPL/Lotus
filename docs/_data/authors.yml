@@ -1,0 +1,21 @@
+author_list:
+  - name: Weikang Wan
+    url: https://wkwan7.github.io/
+    affliation: 1, 2
+  - name: Yifeng Zhu
+    url: https://cs.utexas.edu/~yifengz
+    affliation: 1
+  - name: Rutav Shah
+    url: https://shahrutav.github.io/
+    affliation: 1
+  - name: Yuke Zhu
+    url: https://cs.utexas.edu/~yukez
+    affliation: 1
+  
+
+
+affliation_list:
+  - index: 1
+    name: The University of Texas at Austin
+  - index: 2
+    name: Peking University 

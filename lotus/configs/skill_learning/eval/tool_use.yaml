@@ -1,6 +1,0 @@
-meta_freq: 5
-max_steps: 1000
-testing: false
-visualization: false
-video: true
-mode: "ours"

@@ -1,0 +1,1602 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="LOTUS is a continual imitation learning algorithm that empowers a physical robot to continuously and efficiently learn to solve new manipulation tasks throughout its lifespan.">
+  <meta name="keywords" content="Imitation Learning, Continual Learning, Robot Manipulation">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LOTUS</title>
+
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="{{ site.baseurl }}/static/css/bulma.min.css">
+  <!-- <link rel="stylesheet" href="{{ site.baseurl }}/static/css/bulma-carousel.min.css"> -->
+  <!-- <link rel="stylesheet" href="{{ site.baseurl }}/static/css/bulma-slider.min.css"> -->
+  <link rel="stylesheet" href="{{ site.baseurl }}/static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="icon" href="">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.1.1/chroma.min.js"></script>
+
+  <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+
+
+  <script defer src="{{ site.baseurl }}/static/js/fontawesome.all.min.js"></script>
+  <!-- <script src="{{ site.baseurl }}/static/js/bulma-carousel.min.js"></script> -->
+  <!-- <script src="{{ site.baseurl }}/static/js/bulma-slider.min.js"></script> -->
+  <!-- Add the slick-theme.css if you want default styling -->
+  <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+  <!-- Add the slick-theme.css if you want default styling -->
+  <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js'></script> -->
+
+  <link rel="stylesheet" href="{{ site.baseurl }}/static/css/index.css">
+  <!-- Favicon -->
+  <link rel="icon" href="./static/images/lotus.png">
+  <script src="{{ site.baseurl }}/static/js/index.js"></script>
+  <script src="{{ site.baseurl }}/static/js/plot.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LOTUS</title>
+  <style>
+    .sup-sub {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .sup-sub sup, .sup-sub sub {
+      line-height: 0;
+      position: relative;
+      font-size: smaller;
+    }
+    .sup-sub sup {
+      bottom: 0.6em;
+    }
+    .sup-sub sub {
+      top: 0.3em;
+    }
+    #tasks-slider, #tasks-slider-2, #tasks-slider-3, #tasks-slider-4{
+        width: 500px;
+        margin: 0 auto;  /* This will center the slider if its parent container is set to text-align: center; */
+    }
+    .noUi-value-large {
+        width: 40px;
+        margin-left: -20px;
+        text-align: center;
+    }
+    .noUi-pips .noUi-value.noUi-value-large {
+        display: none;
+    }
+    .offset-right {
+        margin-left: 60px !important;
+    }
+    .slider-value {
+        position: relative; 
+        bottom: 15px;  
+        left: 15px;
+        font-size: 18px; 
+        font-weight: bold;
+    }
+    .title.is-1.publication-title {
+    font-size: 35px;
+    }
+    .short-hr {
+        width: 60%;  
+        border: 0;
+        height: 1px;
+        background-color: rgba(51, 51, 51, 0.8);
+        margin: 0 auto;
+    }
+
+
+  </style>
+  <script>
+    function loadJSON(path, callback) {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == XMLHttpRequest.DONE) {
+                if (xhr.status == 200) {
+                    callback(JSON.parse(xhr.responseText));
+                } else {
+                    console.error("Failed to load JSON data");
+                }
+            }
+        };
+        xhr.open("GET", path, true);
+        xhr.send();
+    }
+  </script>
+  <link href="https://cdn.jsdelivr.net/npm/nouislider@14.7.0/distribute/nouislider.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/nouislider@14.7.0/distribute/nouislider.min.js"></script>
+  
+
+
+</head>
+<body>
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <!-- <a class="navbar-item" href="https://keunhong.com">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a> -->
+
+  </div>
+</nav>
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">
+            <span style="white-space: nowrap;">
+              <img src="./static/images/lotus.png" alt="logo" style="height:1em; vertical-align:bottom;">
+              LOTUS: Continual Imitation Learning for Robot Manipulation</span>
+            <br> Through Unsupervised Skill Discovery
+          </h1>          
+          
+          <!-- include the title info. It's located in _includes/title_info.html -->
+          {% include title_info.html %}
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+
+    <!-- Paper video. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <!-- <h2 class="title is-3">Video</h2> -->
+        <div class="publication-video">
+          <!-- <iframe src="./static/images/LOTUS_video_final_no_title.mp4"
+                  frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe> -->
+          <video autoplay muted loop controls>
+            <source src="./static/images/LOTUS_video_final_no_title.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+    </div>
+    <!--/ Paper video. -->
+  
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          We introduce <strong>LOTUS</strong>, a continual imitation learning algorithm that empowers a physical robot to continuously and efficiently learn to solve new manipulation tasks throughout its lifespan. The core idea behind <strong>LOTUS</strong> is constructing an ever-growing skill library from a sequence of new tasks with a small number of corresponding task demonstrations. <strong>LOTUS</strong> starts with a continual skill discovery process using an open-vocabulary vision model, which extracts skills as recurring patterns presented in unstructured demonstrations. Continual skill discovery updates existing skills to avoid catastrophic forgetting of previous tasks and adds new skills to exhibit novel behaviors. <strong>LOTUS</strong> trains a meta-controller that flexibly composes various skills to tackle vision-based manipulation tasks in the lifelong learning process. Our comprehensive experiments show that <strong>LOTUS</strong> outperforms state-of-the-art baselines by over 11% in average success rates, showing its superior knowledge transfer ability compared to prior methods.
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+  </div>
+</section>
+
+  <hr>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Method Overview. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Method Overview</h2>
+        <br>
+        <img src="./static/images/Method.png" style="width: 100%;">
+        <div class="content has-text-justified">
+          <strong>LOTUS</strong> consists of two components: continual skill discovery and the hierarchical policy
+          with the skill library. For continual skill discovery, we obtain temporal segments from demonstrations using hierarchical clustering with
+          DINOv2, and incrementally cluster the temporal segments into partitions to either update existing skills or learn new skills. For the
+          hierarchical policy, a meta-controller π<sup>H</sup> selects a skill by predicting an index k and specifies the subgoals for the selected skill π<span class="sup-sub"><sup>L</sup><sub>k</sub></span> to
+          achieve. Note that because the input to a transformer is permutation invariant, we also add sinusoidal positional encoding to input tokens
+          in order to inform transformers of the temporal order of input tokens. We omit this information in the figure for clarity.
+        </div>
+      </div>
+    </div>
+    <!--/ Method. -->
+
+    <br>
+    <hr>
+    <br>
+
+    <!-- Real Robot Experiment. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Real Robot Experiments</h2>
+        <br>
+        <img src="./static/images/real_world_task_vis2.png" style="width: 100%;">
+        <div class="content has-text-justified">
+          <strong>Task Visualization.</strong> In real robot experiments, there are 25 tasks in base task stage and 5 new tasks in each lifelong task stage (Total: 5 lifelong task stages). 
+          Different tasks either have distinct language descriptions, or they have the same language description but under different scenes.
+
+        </div>
+        <br>
+        <br>
+        <img src="./static/images/real_world_experiments_comparison.png" style="width: 70%;">
+        <div class="content has-text-justified">
+          <strong>Metrics.</strong> We report three metrics (All metrics are computed in terms of success rate):
+          <ul>
+              <li><strong>FWT (forward transfer):</strong> higher FWT means a policy learns faster on a new task;</li>
+              <li><strong>NBR (negative backward trasnfer):</strong> Lower NBT means a policy has better performance in the previously seen tasks;</li>
+              <li><strong>AUC (area under the success rate curve):</strong> higher AUC means an overall better performance considering both NBT and FWT;</li>
+          </ul>
+          <strong>Results Analysis.</strong> We compare <strong>LOTUS</strong>  with the best baseline ER (Experience Replay) on <a href="https://ut-austin-rpl.github.io/MUTEX/">Mutex</a> tasks. 
+          Our evaluation shows that <strong>LOTUS</strong> achieved 50 (+11) in FWT (learn much faster on new tasks), 21 (+2) in NBT (remaining competitive performance on previously learned task), and 56 (+9) in AUC in comparison to ER. 
+          The performance over the three metrics shows the efficacy of <strong>LOTUS</strong> policies on real robot hardware.
+        </div>
+      </div>
+    </div>
+    <!--/ Real Robot Experiment. -->
+
+
+  </div>
+</section>
+
+
+<!-- Clustering results -->
+<br>
+<hr>
+<br>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Visualization Title -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Skill Discovery Results</h2>
+        <div class="content has-text-justified">
+          Here, we show the feature space of temporal segments in continual skill discovey using T-SNE. 
+          We use different colors to represent different skills. We also visualize three key frames for each data point.
+          <strong style="color: orange;">Visualization instruction:</strong> Drag the slider to show changes during the lifelong process, and hover over a point to display key frames for that segment.
+        </div>
+      </div>
+    </div>
+    
+    <br>
+    <hr class="short-hr">
+    <br>
+
+    <!-- Real World Tasks -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h3 class="title is-4">Real World Tasks</h3>
+      </div>
+    </div>
+
+    <!-- Slider above the visualization 4 -->
+    <div class="slider-container offset-right">
+      <label for="tasks-slider-4">Lifelong Learning Tasks:</label>
+      <div id="tasks-slider-4"></div>
+      <div id="slider-value-current-4" class="slider-value"></div>
+    </div>
+
+    <!-- Toggle button 4 -->
+    <div class="toggle-container offset-right">
+      <input type="checkbox" id="highlight-toggle-4" name="highlight-toggle-4">
+      <label for="highlight-toggle-4">Highlight Current Task</label>
+    </div>
+
+    <!-- Visualization Container 4 -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+          <div id="plotly-div-4"></div>
+      </div>
+    </div>
+
+    <!-- Image Display Container 4 -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+          <img id="image1-4" src="" alt="Keyframe 1">
+          <img id="image2-4" src="" alt="Keyframe 2">
+          <img id="image3-4" src="" alt="Keyframe 3">
+      </div>
+    </div>
+
+    <!-- Task Name Display Container 4 -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+          <p id="task-name-4"></p>
+      </div>
+    </div>
+
+    <!-- JavaScript for the Visualization -->
+    <script>
+      var tsneResults4, taskIds4, skillIds4, colors4;
+      var taskFolders4 = [
+        'rw_all/RW1_open_the_bottom_drawer_demo', 
+        'rw_all/RW1_open_the_top_drawer_demo', 
+        'rw_all/RW1_open_the_top_drawer_and_put_the_bowl_in_the_back_of_the_scene_inside_it_demo', 
+        'rw_all/RW1_open_the_top_drawer_and_put_the_granola_bar_inside_it_demo', 
+        'rw_all/RW1_put_the_granola_bar_in_the_back_compartment_of_the_caddy_demo', 
+        'rw_all/RW1_put_the_granola_bar_in_the_front_compartment_of_the_caddy_demo', 
+        'rw_all/RW6_put_the_bread_on_the_white_plate_demo', 
+        'rw_all/RW6_put_the_pink_mug_on_the_white_plate_demo', 
+        'rw_all/RW7_open_the_air_fryer_and_put_the_blue_bowl_inside_it_demo', 
+        'rw_all/RW7_open_the_fryer_demo', 
+        'rw_all/RW7_put_the_book_in_the_back_compartment_of_the_caddy_demo', 
+        'rw_all/RW7_put_the_book_in_the_front_compartment_of_the_caddy_demo', 
+        'rw_all/RW7_put_the_red_cup_in_the_front_compartment_of_the_caddy_demo', 
+        'rw_all/RW7_put_the_blue_bowl_in_the_back_compartment_of_the_caddy_demo', 
+        'rw_all/RW8_open_the_bottom_drawer_demo', 
+        'rw_all/RW8_open_the_top_drawer_demo', 
+        'rw_all/RW8_open_the_top_drawer_and_put_the_blue_mug_inside_it_demo', 
+        'rw_all/RW8_open_the_top_drawer_and_put_the_pink_mug_inside_it_demo', 
+        'rw_all/RW8_put_the_blue_mug_on_the_white_plate_demo', 
+        'rw_all/RW8_put_the_bread_on_the_white_plate_demo', 
+        'rw_all/RW2_pull_out_the_tray_of_the_oven_and_put_the_blue_cup_on_it_demo', 
+        'rw_all/RW2_pull_out_the_tray_of_the_oven_and_put_the_red_bowl_on_it_demo', 
+        'rw_all/RW2_put_the_blue_cup_in_the_basket_demo', 
+        'rw_all/RW2_put_the_mac_and_cheese_box_in_the_basket_demo', 
+        'rw_all/RW2_pull_out_the_tray_of_the_oven_demo', 
+        'rw_all/RW2_put_the_red_bowl_in_the_basket_demo', 
+        'rw_all/RW3_put_the_granola_bar_inside_the_basket_demo', 
+        'rw_all/RW3_put_the_granola_bar_inside_the_top_drawer_demo', 
+        'rw_all/RW3_put_the_pink_mug_inside_the_basket_demo', 
+        'rw_all/RW3_put_the_red_bowl_inside_the_basket_demo', 
+        'rw_all/RW3_put_the_pink_mug_inside_the_top_drawer_and_close_the_drawer_demo', 
+        'rw_all/RW3_put_the_red_bowl_inside_the_top_drawer_and_close_the_drawer_demo', 
+        'rw_all/RW3_close_the_top_drawer_and_open_the_bottom_drawer_demo', 
+        'rw_all/RW4_pull_out_the_tray_of_the_oven_demo', 
+        'rw_all/RW4_pull_out_the_tray_of_the_oven_and_put_the_bowl_with_hot_dogs_on_the_tray_demo', 
+        'rw_all/RW4_pull_out_the_tray_of_the_oven_and_put_the_red_cup_on_the_tray_demo', 
+        'rw_all/RW4_put_the_book_in_the_back_compartment_of_the_caddy_demo', 
+        'rw_all/RW4_put_the_book_in_the_front_compartment_of_the_caddy_demo', 
+        'rw_all/RW4_put_the_red_cup_in_the_back_compartment_of_the_caddy_demo', 
+        'rw_all/RW5_push_the_tray_of_the_oven_in_demo', 
+        'rw_all/RW5_put_the_blue_mug_on_the_oven_tray_demo', 
+        'rw_all/RW5_put_the_blue_mug_on_the_white_plate_demo', 
+        'rw_all/RW5_put_the_bread_on_oven_tray_and_push_it_in_the_oven_demo', 
+        'rw_all/RW5_put_the_bread_on_the_white_plate_demo', 
+        'rw_all/RW5_put_the_yellow_bowl_on_oven_tray_and_push_it_in_the_oven_demo', 
+        'rw_all/RW5_put_the_yellow_bowl_on_the_white_plate_demo', 
+        'rw_all/RW6_open_the_air_fryer_demo', 
+        'rw_all/RW6_open_the_air_fryer_and_put_the_bowl_with_hot_dogs_in_it_demo', 
+        'rw_all/RW6_open_the_air_fryer_and_put_the_bread_in_it_demo', 
+        'rw_all/RW6_put_the_bowl_with_hot_dogs_on_the_white_plate_demo'
+      ]
+  
+      function updatePlot4(selectedNumTasks) {
+        // Filter points based on selectedNumTasks
+        var filteredIndices4 = taskIds4.map((taskId, index) => taskId < selectedNumTasks ? index : -1).filter(index => index != -1);
+        var filteredTsneResults4 = filteredIndices4.map(index => tsneResults4[index]);
+        var filteredTaskIds4 = filteredIndices4.map(index => taskIds4[index]);
+        var filteredSkillIds4 = filteredIndices4.map(index => skillIds4[index]);
+        var highlightCurrent4 = document.getElementById('highlight-toggle-4').checked;
+
+        var markerSizes4 = filteredTaskIds4.map(taskId => taskId === selectedNumTasks ? 8 : 5);
+        var markerOpacities4, markerLines4;
+
+        if (highlightCurrent4 && selectedNumTasks != 25) {
+            markerOpacities4 = [];
+            markerLines4 = [];
+            for (let taskId of filteredTaskIds4) {
+                if (taskId + 1 < selectedNumTasks) {
+                    markerOpacities4.push(0.2); 
+                    markerLines4.push({color: 'transparent', width: 0}); 
+                } else if (taskId + 1 == selectedNumTasks) {
+                    markerOpacities4.push(1.0);
+                    markerLines4.push({color: 'transparent', width: 0}); 
+                } else {
+                    markerOpacities4.push(1.0);
+                    markerLines4.push({color: 'transparent', width: 0}); 
+                }
+            }
+        } else {
+            markerOpacities4 = filteredTaskIds4.map(() => 1.0);
+            markerLines4 = filteredTaskIds4.map(() => ({color: 'transparent', width: 0})); 
+        }
+
+        var data4 = [{
+            x: filteredTsneResults4.map(point => point[0]),
+            y: filteredTsneResults4.map(point => point[1]),
+            mode: 'markers',
+            type: 'scatter',
+            hoverinfo: 'text',
+            text: filteredTaskIds4.map((taskId, index) => `Task ID: ${taskId}, Skill ID: ${filteredSkillIds4[index]}`),
+            marker: {
+                size: markerSizes4,
+                color: filteredSkillIds4.map(skillId => colors4[skillId]),
+                opacity: markerOpacities4,
+                line: markerLines4
+            }
+        }];
+
+        var layout4 = {
+            title: 'T-SNE Visualization for the feature space of temporal segments',
+            xaxis: { 
+                range: [-80, 80],
+                showgrid: false,  
+                zeroline: false, 
+                showticklabels: false,  
+                showline: false  
+            },
+            yaxis: {
+                range: [-80, 80],
+                showgrid: false,
+                zeroline: false,
+                showticklabels: false,
+                showline: false
+            },
+            showlegend: false, 
+            shapes: [{
+                type: 'circle',
+                x0: -80,
+                y0: -80,
+                x1: 80,
+                y1: 80,
+                fillcolor: 'rgba(192,192,192,0.2)', 
+                line: {
+                    color: 'rgba(0,0,0,0)' 
+                }
+            }]
+        };
+
+        Plotly.newPlot('plotly-div-4', data4, layout4);
+
+        document.getElementById('plotly-div-4').on('plotly_hover', function(data) {
+            var point = data.points[0];
+            var taskId = taskIds4[point.pointNumber];
+            var demoIndex = demoIndices4[point.pointNumber];
+            var start = segStart4[point.pointNumber];
+            var end = segEnd4[point.pointNumber];
+
+            var taskFolder4 = taskFolders4[taskId];
+            var taskName4 = "Task name: " + taskFolder4.split("/")[1].replace(/_/g, " ").replace("demo", "").trim();
+            document.getElementById('task-name-4').innerText = taskName4;
+
+            var imagePath1 = `./static/data/${taskFolder4}/demo_${demoIndex}/${start}.png`;
+            var imagePath2 = `./static/data/${taskFolder4}/demo_${demoIndex}/${start + Math.floor((end - start) / 2)}.png`;
+            var imagePath3 = `./static/data/${taskFolder4}/demo_${demoIndex}/${end-1}.png`;
+
+            document.getElementById('image1-4').src = imagePath1;
+            document.getElementById('image2-4').src = imagePath2;
+            document.getElementById('image3-4').src = imagePath3;
+        });
+    }
+
+      // Initialize the noUiSlider for the second visualization
+      var slider4 = document.getElementById('tasks-slider-4');
+      noUiSlider.create(slider4, {
+          start: [25],
+          step: 5,
+          range: {
+              'min': [25],
+              'max': [50]
+          },
+          pips: {
+              mode: 'range',
+              density: 10
+          }
+      });
+
+      // Display the initial slider value for the second visualization
+      document.getElementById('slider-value-current-4').innerText = slider4.noUiSlider.get();
+
+      // Update the displayed slider value on change for the second visualization
+      slider4.noUiSlider.on('update', function(values, handle) {
+          document.getElementById('slider-value-current-4').innerText = Math.round(values[handle]);
+      });
+
+      // Update the plot when the slider value changes for the second visualization
+      slider4.noUiSlider.on('set', function(values) {
+          updatePlot4(parseInt(values[0]));
+      });
+
+      loadJSON('./static/data/rw_all/cluster_data.json', function(visualizationData4) {
+          // Extracting necessary data
+          tsneResults4 = visualizationData4.tsne_results;
+          taskIds4 = visualizationData4.task_ids;
+          skillIds4 = visualizationData4.skill_ids;
+          demoIndices4 = visualizationData4.demo_indices;
+          segStart4 = visualizationData4.seg_start;
+          segEnd4 = visualizationData4.seg_end;
+          colors4 = visualizationData4.colors;
+
+          // Initial visualization with the default value of the slider for the second visualization
+          updatePlot4(6);
+
+          // Add event listener to slider for the second visualization
+          document.getElementById("tasks-slider-4").addEventListener("input", function() {
+              var selectedNumTasks = this.value;
+              updatePlot4(selectedNumTasks);
+          });
+
+          // Add interactivity for clicking for the second visualization
+          document.getElementById('plotly-div-4').on('plotly_click', function(data) {
+              var point = data.points[0];
+              var x = point.x;
+              var y = point.y;
+              var taskId = taskIds4[point.pointNumber];
+              var skillId = skillIds4[point.pointNumber];
+
+              console.log(`Clicked on point (${x}, ${y}) with Task ID: ${taskId} and Skill ID: ${skillId}`);
+          });
+
+          // Add interactivity for hovering for the second visualization
+          document.getElementById('plotly-div-4').on('plotly_hover', function(data) {
+              var point = data.points[0];
+              var taskId = taskIds4[point.pointNumber];
+              var demoIndex = demoIndices4[point.pointNumber];
+              var start = segStart4[point.pointNumber];
+              var end = segEnd4[point.pointNumber];
+
+              var taskFolder4 = taskFolders4[taskId];
+
+              var imagePath1 = `./static/data/${taskFolder4}/demo_${demoIndex}/${start}.png`;
+              var imagePath2 = `./static/data/${taskFolder4}/demo_${demoIndex}/${start + Math.floor((end - start) / 2)}.png`;
+              var imagePath3 = `./static/data/${taskFolder4}/demo_${demoIndex}/${end-1}.png`;
+
+              document.getElementById('image1-4').src = imagePath1;
+              document.getElementById('image2-4').src = imagePath2;
+              document.getElementById('image3-4').src = imagePath3;
+          });
+
+          document.getElementById('highlight-toggle-4').addEventListener('change', function() {
+              var selectedNumTasks = parseInt(slider4.noUiSlider.get());
+              updatePlot4(selectedNumTasks);
+          });
+
+      });
+
+
+    </script>
+    <br>
+    <hr class="short-hr">
+    <br>
+
+    <!-- LIBERO-Object -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h3 class="title is-4">LIBERO-Object</h3>
+      </div>
+    </div>
+
+    <!-- Slider above the visualization -->
+    <div class="slider-container offset-right">
+      <label for="tasks-slider">Lifelong Learning Tasks: </label>
+      <div id="tasks-slider"></div>
+      <div id="slider-value-current" class="slider-value"></div>
+    </div>
+
+    <!-- toggle button -->
+    <div class="toggle-container offset-right">
+      <input type="checkbox" id="highlight-toggle" name="highlight-toggle">
+      <label for="highlight-toggle">Highlight Current Task</label>
+    </div>
+  
+    
+    <!-- Visualization Container -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <div id="plotly-div"></div>
+      </div>
+    </div>
+  
+    <!-- Image Display Container -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <img id="image1" src="" alt="Keyframe 1">
+        <img id="image2" src="" alt="Keyframe 2">
+        <img id="image3" src="" alt="Keyframe 3">
+      </div>
+    </div>
+
+    <!-- Task Name Display Container -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <p id="task-name"></p>
+      </div>
+    </div>
+
+    <!-- JavaScript for the Visualization -->
+    <script>
+      var tsneResults, taskIds, skillIds, colors;
+      var taskFolders = [
+        'libero_object/pick_up_the_alphabet_soup_and_place_it_in_the_basket_demo', 
+        'libero_object/pick_up_the_cream_cheese_and_place_it_in_the_basket_demo', 
+        'libero_object/pick_up_the_salad_dressing_and_place_it_in_the_basket_demo', 
+        'libero_object/pick_up_the_bbq_sauce_and_place_it_in_the_basket_demo', 
+        'libero_object/pick_up_the_ketchup_and_place_it_in_the_basket_demo', 
+        'libero_object/pick_up_the_tomato_sauce_and_place_it_in_the_basket_demo', 
+        'libero_object/pick_up_the_butter_and_place_it_in_the_basket_demo', 
+        'libero_object/pick_up_the_milk_and_place_it_in_the_basket_demo', 
+        'libero_object/pick_up_the_chocolate_pudding_and_place_it_in_the_basket_demo', 
+        'libero_object/pick_up_the_orange_juice_and_place_it_in_the_basket_demo'
+      ];
+  
+      function updatePlot(selectedNumTasks) {
+          // Filter points based on selectedNumTasks
+          var filteredIndices = taskIds.map((taskId, index) => taskId < selectedNumTasks ? index : -1).filter(index => index != -1);
+          var filteredTsneResults = filteredIndices.map(index => tsneResults[index]);
+          var filteredTaskIds = filteredIndices.map(index => taskIds[index]);
+          var filteredSkillIds = filteredIndices.map(index => skillIds[index]);
+          var highlightCurrent = document.getElementById('highlight-toggle').checked;
+
+          var markerSizes = filteredTaskIds.map(taskId => taskId === selectedNumTasks ? 10 : 7);
+
+          if (highlightCurrent && selectedNumTasks != 6) {
+              markerOpacities = [];
+              markerLines = [];
+              for (let taskId of filteredTaskIds) {
+                  if (taskId + 1 < selectedNumTasks) {
+                      markerOpacities.push(0.2); 
+                      markerLines.push({color: 'transparent', width: 0}); 
+                  } else if (taskId + 1 == selectedNumTasks) {
+                      markerOpacities.push(1.0);
+                      markerLines.push({color: 'transparent', width: 0}); 
+                  } else {
+                      markerOpacities.push(1.0);
+                      markerLines.push({color: 'transparent', width: 0}); 
+                  }
+              }
+          } else {
+              markerOpacities = filteredTaskIds.map(() => 1.0);
+              markerLines = filteredTaskIds.map(() => ({color: 'transparent', width: 0})); 
+          }
+
+          var data = [{
+              x: filteredTsneResults.map(point => point[0]),
+              y: filteredTsneResults.map(point => point[1]),
+              mode: 'markers',
+              type: 'scatter',
+              hoverinfo: 'text',
+              text: filteredTaskIds.map((taskId, index) => `Task ID: ${taskId}, Skill ID: ${filteredSkillIds[index]}`),
+              marker: {
+                  size: markerSizes,
+                  color: filteredSkillIds.map(skillId => colors[skillId]),
+                  opacity: markerOpacities,
+                  line: markerLines
+              }
+          }];
+
+
+
+
+          // Create the plot using Plotly.js
+          var data = [{
+              x: filteredTsneResults.map(point => point[0]),
+              y: filteredTsneResults.map(point => point[1]),
+              mode: 'markers',
+              type: 'scatter',
+              hoverinfo: 'text',
+              text: filteredTaskIds.map((taskId, index) => `Task ID: ${taskId}, Skill ID: ${filteredSkillIds[index]}`),
+              marker: {
+                  size: 7, 
+                  color: filteredSkillIds.map(skillId => colors[skillId]),
+                  opacity: markerOpacities,
+                  line: markerLines
+              }
+          }];
+
+          var layout = {
+            title: 'T-SNE Visualization for the feature space of temporal segments',
+            xaxis: { 
+                range: [-50, 50],
+                showgrid: false,  
+                zeroline: false, 
+                showticklabels: false,  
+                showline: false  
+            },
+            yaxis: {
+                range: [-50, 50],
+                showgrid: false,
+                zeroline: false,
+                showticklabels: false,
+                showline: false
+            },
+            showlegend: false, 
+            shapes: [{
+                type: 'circle',
+                x0: -50,
+                y0: -50,
+                x1: 50,
+                y1: 50,
+                fillcolor: 'rgba(192,192,192,0.2)', 
+                line: {
+                    color: 'rgba(0,0,0,0)' 
+                }
+            }]
+        };
+
+
+
+          Plotly.newPlot('plotly-div', data, layout);
+
+          // Re-add the event listener after the plot is updated
+          document.getElementById('plotly-div').on('plotly_hover', function(data) {
+              var point = data.points[0];
+              var taskId = taskIds[point.pointNumber];
+              var demoIndex = demoIndices[point.pointNumber];
+              var start = segStart[point.pointNumber];
+              var end = segEnd[point.pointNumber];
+
+              var taskFolder = taskFolders[taskId];
+              var taskName = "Task name: " + taskFolder.split("/")[1].replace(/_/g, " ").replace("demo", "").trim(); // Convert the folder name to a human-readable task name with prefix
+
+              // Update the displayed task name
+              document.getElementById('task-name').innerText = taskName;
+
+              var imagePath1 = `./static/data/${taskFolder}/demo_${demoIndex}/${start}.png`;
+              var imagePath2 = `./static/data/${taskFolder}/demo_${demoIndex}/${start + Math.floor((end - start) / 2)}.png`;
+              var imagePath3 = `./static/data/${taskFolder}/demo_${demoIndex}/${end-1}.png`;
+
+              document.getElementById('image1').src = imagePath1;
+              document.getElementById('image2').src = imagePath2;
+              document.getElementById('image3').src = imagePath3;
+          });
+      }
+
+      // Initialize the noUiSlider
+      var slider = document.getElementById('tasks-slider');
+      noUiSlider.create(slider, {
+          start: [6],
+          step: 1,
+          range: {
+              'min': [6],
+              'max': [10]
+          },
+          pips: {
+              mode: 'range',
+              density: 10
+          }
+      });
+
+      // Display the initial slider value
+      document.getElementById('slider-value-current').innerText = slider.noUiSlider.get();
+
+      // Update the displayed slider value on change
+      slider.noUiSlider.on('update', function(values, handle) {
+          document.getElementById('slider-value-current').innerText = Math.round(values[handle]);
+      });
+
+      // Update the plot when the slider value changes
+      slider.noUiSlider.on('set', function(values) {
+          updatePlot(parseInt(values[0]));
+      });
+
+
+
+      loadJSON('./static/data/libero_object/cluster_data.json', function(visualizationData) {
+          // Extracting necessary data
+          tsneResults = visualizationData.tsne_results;
+          taskIds = visualizationData.task_ids;
+          skillIds = visualizationData.skill_ids;
+          demoIndices = visualizationData.demo_indices;
+          segStart = visualizationData.seg_start;
+          segEnd = visualizationData.seg_end;
+          colors = visualizationData.colors;
+
+          // Initial visualization with the default value of the slider
+          updatePlot(6);
+
+          // Add event listener to slider
+          document.getElementById("tasks-slider").addEventListener("input", function() {
+              var selectedNumTasks = this.value;
+              updatePlot(selectedNumTasks);
+          });
+
+          // Add interactivity for clicking
+          document.getElementById('plotly-div').on('plotly_click', function(data) {
+              var point = data.points[0];
+              var x = point.x;
+              var y = point.y;
+              var taskId = taskIds[point.pointNumber];
+              var skillId = skillIds[point.pointNumber];
+
+              console.log(`Clicked on point (${x}, ${y}) with Task ID: ${taskId} and Skill ID: ${skillId}`);
+          });
+
+          // Add interactivity for hovering
+          document.getElementById('plotly-div').on('plotly_hover', function(data) {
+              var point = data.points[0];
+              var taskId = taskIds[point.pointNumber];
+              var demoIndex = demoIndices[point.pointNumber];
+              var start = segStart[point.pointNumber];
+              var end = segEnd[point.pointNumber];
+
+              var taskFolder = taskFolders[taskId];
+
+              var imagePath1 = `./static/data/${taskFolder}/demo_${demoIndex}/${start}.png`;
+              var imagePath2 = `./static/data/${taskFolder}/demo_${demoIndex}/${start + Math.floor((end - start) / 2)}.png`;
+              var imagePath3 = `./static/data/${taskFolder}/demo_${demoIndex}/${end-1}.png`;
+
+              document.getElementById('image1').src = imagePath1;
+              document.getElementById('image2').src = imagePath2;
+              document.getElementById('image3').src = imagePath3;
+          });
+
+          document.getElementById('highlight-toggle').addEventListener('change', function() {
+              var selectedNumTasks = parseInt(slider.noUiSlider.get());
+              updatePlot(selectedNumTasks);
+          });
+
+      });
+
+    </script>
+    <br>
+    <hr class="short-hr">
+    <br>
+
+    <!-- LIBERO-Goal -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h3 class="title is-4">LIBERO-Goal</h3>
+      </div>
+    </div>
+
+    <!-- Slider above the visualization 2 -->
+    <div class="slider-container offset-right">
+      <label for="tasks-slider-2">Lifelong Learning Tasks: </label>
+      <div id="tasks-slider-2"></div>
+      <div id="slider-value-current-2" class="slider-value"></div>
+    </div>
+
+    <!-- Toggle button 2 -->
+    <div class="toggle-container offset-right">
+      <input type="checkbox" id="highlight-toggle-2" name="highlight-toggle-2">
+      <label for="highlight-toggle-2">Highlight Current Task</label>
+    </div>
+
+    <!-- Visualization Container 2 -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+          <div id="plotly-div-2"></div>
+      </div>
+    </div>
+
+    <!-- Image Display Container 2 -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+          <img id="image1-2" src="" alt="Keyframe 1">
+          <img id="image2-2" src="" alt="Keyframe 2">
+          <img id="image3-2" src="" alt="Keyframe 3">
+      </div>
+    </div>
+
+    <!-- Task Name Display Container 2 -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+          <p id="task-name-2"></p>
+      </div>
+    </div>
+
+    <!-- JavaScript for the Visualization -->
+    <script>
+      var tsneResults2, taskIds2, skillIds2, colors2;
+      var taskFolders2 = [
+        'libero_goal/open_the_middle_drawer_of_the_cabinet_demo', 
+        'libero_goal/put_the_bowl_on_the_stove_demo', 
+        'libero_goal/put_the_wine_bottle_on_top_of_the_cabinet_demo', 
+        'libero_goal/open_the_top_drawer_and_put_the_bowl_inside_demo', 
+        'libero_goal/put_the_bowl_on_top_of_the_cabinet_demo', 
+        'libero_goal/push_the_plate_to_the_front_of_the_stove_demo', 
+        'libero_goal/put_the_cream_cheese_in_the_bowl_demo', 
+        'libero_goal/turn_on_the_stove_demo', 
+        'libero_goal/put_the_bowl_on_the_plate_demo', 
+        'libero_goal/put_the_wine_bottle_on_the_rack_demo']
+  
+      function updatePlot2(selectedNumTasks) {
+        // Filter points based on selectedNumTasks
+        var filteredIndices2 = taskIds2.map((taskId, index) => taskId < selectedNumTasks ? index : -1).filter(index => index != -1);
+        var filteredTsneResults2 = filteredIndices2.map(index => tsneResults2[index]);
+        var filteredTaskIds2 = filteredIndices2.map(index => taskIds2[index]);
+        var filteredSkillIds2 = filteredIndices2.map(index => skillIds2[index]);
+        var highlightCurrent2 = document.getElementById('highlight-toggle-2').checked;
+
+        var markerSizes2 = filteredTaskIds2.map(taskId => taskId === selectedNumTasks ? 10 : 7);
+        var markerOpacities2, markerLines2;
+
+        if (highlightCurrent2 && selectedNumTasks != 6) {
+            markerOpacities2 = [];
+            markerLines2 = [];
+            for (let taskId of filteredTaskIds2) {
+                if (taskId + 1 < selectedNumTasks) {
+                    markerOpacities2.push(0.2); 
+                    markerLines2.push({color: 'transparent', width: 0}); 
+                } else if (taskId + 1 == selectedNumTasks) {
+                    markerOpacities2.push(1.0);
+                    markerLines2.push({color: 'transparent', width: 0}); 
+                } else {
+                    markerOpacities2.push(1.0);
+                    markerLines2.push({color: 'transparent', width: 0}); 
+                }
+            }
+        } else {
+            markerOpacities2 = filteredTaskIds2.map(() => 1.0);
+            markerLines2 = filteredTaskIds2.map(() => ({color: 'transparent', width: 0})); 
+        }
+
+        var data2 = [{
+            x: filteredTsneResults2.map(point => point[0]),
+            y: filteredTsneResults2.map(point => point[1]),
+            mode: 'markers',
+            type: 'scatter',
+            hoverinfo: 'text',
+            text: filteredTaskIds2.map((taskId, index) => `Task ID: ${taskId}, Skill ID: ${filteredSkillIds2[index]}`),
+            marker: {
+                size: markerSizes2,
+                color: filteredSkillIds2.map(skillId => colors2[skillId]),
+                opacity: markerOpacities2,
+                line: markerLines2
+            }
+        }];
+
+        var layout2 = {
+            title: 'T-SNE Visualization for the feature space of temporal segments',
+            xaxis: { 
+                range: [-50, 60],
+                showgrid: false,  
+                zeroline: false, 
+                showticklabels: false,  
+                showline: false  
+            },
+            yaxis: {
+                range: [-50, 50],
+                showgrid: false,
+                zeroline: false,
+                showticklabels: false,
+                showline: false
+            },
+            showlegend: false, 
+            shapes: [{
+                type: 'circle',
+                x0: -50,
+                y0: -50,
+                x1: 60,
+                y1: 50,
+                fillcolor: 'rgba(192,192,192,0.2)', 
+                line: {
+                    color: 'rgba(0,0,0,0)' 
+                }
+            }]
+        };
+
+        Plotly.newPlot('plotly-div-2', data2, layout2);
+
+        document.getElementById('plotly-div-2').on('plotly_hover', function(data) {
+            var point = data.points[0];
+            var taskId = taskIds2[point.pointNumber];
+            var demoIndex = demoIndices2[point.pointNumber];
+            var start = segStart2[point.pointNumber];
+            var end = segEnd2[point.pointNumber];
+
+            var taskFolder2 = taskFolders2[taskId];
+            var taskName2 = "Task name: " + taskFolder2.split("/")[1].replace(/_/g, " ").replace("demo", "").trim();
+            document.getElementById('task-name-2').innerText = taskName2;
+
+            var imagePath1 = `./static/data/${taskFolder2}/demo_${demoIndex}/${start}.png`;
+            var imagePath2 = `./static/data/${taskFolder2}/demo_${demoIndex}/${start + Math.floor((end - start) / 2)}.png`;
+            var imagePath3 = `./static/data/${taskFolder2}/demo_${demoIndex}/${end-1}.png`;
+
+            document.getElementById('image1-2').src = imagePath1;
+            document.getElementById('image2-2').src = imagePath2;
+            document.getElementById('image3-2').src = imagePath3;
+        });
+    }
+
+      // Initialize the noUiSlider for the second visualization
+      var slider2 = document.getElementById('tasks-slider-2');
+      noUiSlider.create(slider2, {
+          start: [6],
+          step: 1,
+          range: {
+              'min': [6],
+              'max': [10]
+          },
+          pips: {
+              mode: 'range',
+              density: 10
+          }
+      });
+
+      // Display the initial slider value for the second visualization
+      document.getElementById('slider-value-current-2').innerText = slider2.noUiSlider.get();
+
+      // Update the displayed slider value on change for the second visualization
+      slider2.noUiSlider.on('update', function(values, handle) {
+          document.getElementById('slider-value-current-2').innerText = Math.round(values[handle]);
+      });
+
+      // Update the plot when the slider value changes for the second visualization
+      slider2.noUiSlider.on('set', function(values) {
+          updatePlot2(parseInt(values[0]));
+      });
+
+      loadJSON('./static/data/libero_goal/cluster_data.json', function(visualizationData2) {
+          // Extracting necessary data
+          tsneResults2 = visualizationData2.tsne_results;
+          taskIds2 = visualizationData2.task_ids;
+          skillIds2 = visualizationData2.skill_ids;
+          demoIndices2 = visualizationData2.demo_indices;
+          segStart2 = visualizationData2.seg_start;
+          segEnd2 = visualizationData2.seg_end;
+          colors2 = visualizationData2.colors;
+
+          // Initial visualization with the default value of the slider for the second visualization
+          updatePlot2(6);
+
+          // Add event listener to slider for the second visualization
+          document.getElementById("tasks-slider-2").addEventListener("input", function() {
+              var selectedNumTasks = this.value;
+              updatePlot2(selectedNumTasks);
+          });
+
+          // Add interactivity for clicking for the second visualization
+          document.getElementById('plotly-div-2').on('plotly_click', function(data) {
+              var point = data.points[0];
+              var x = point.x;
+              var y = point.y;
+              var taskId = taskIds2[point.pointNumber];
+              var skillId = skillIds2[point.pointNumber];
+
+              console.log(`Clicked on point (${x}, ${y}) with Task ID: ${taskId} and Skill ID: ${skillId}`);
+          });
+
+          // Add interactivity for hovering for the second visualization
+          document.getElementById('plotly-div-2').on('plotly_hover', function(data) {
+              var point = data.points[0];
+              var taskId = taskIds2[point.pointNumber];
+              var demoIndex = demoIndices2[point.pointNumber];
+              var start = segStart2[point.pointNumber];
+              var end = segEnd2[point.pointNumber];
+
+              var taskFolder2 = taskFolders2[taskId];
+
+              var imagePath1 = `./static/data/${taskFolder2}/demo_${demoIndex}/${start}.png`;
+              var imagePath2 = `./static/data/${taskFolder2}/demo_${demoIndex}/${start + Math.floor((end - start) / 2)}.png`;
+              var imagePath3 = `./static/data/${taskFolder2}/demo_${demoIndex}/${end-1}.png`;
+
+              document.getElementById('image1-2').src = imagePath1;
+              document.getElementById('image2-2').src = imagePath2;
+              document.getElementById('image3-2').src = imagePath3;
+          });
+
+          document.getElementById('highlight-toggle-2').addEventListener('change', function() {
+              var selectedNumTasks = parseInt(slider2.noUiSlider.get());
+              updatePlot2(selectedNumTasks);
+          });
+
+      });
+
+
+    </script>
+    <br>
+    <hr class="short-hr">
+    <br>
+
+
+    <!-- LIBERO-50 -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h3 class="title is-4">LIBERO-50</h3>
+      </div>
+    </div>
+
+    <!-- Slider above the visualization 3 -->
+    <div class="slider-container offset-right">
+      <label for="tasks-slider-3">Lifelong Learning Tasks: </label>
+      <div id="tasks-slider-3"></div>
+      <div id="slider-value-current-3" class="slider-value"></div>
+    </div>
+
+    <!-- Toggle button 3 -->
+    <div class="toggle-container offset-right">
+      <input type="checkbox" id="highlight-toggle-3" name="highlight-toggle-3">
+      <label for="highlight-toggle-3">Highlight Current Task</label>
+    </div>
+
+    <!-- Visualization Container 3 -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+          <div id="plotly-div-3"></div>
+      </div>
+    </div>
+
+    <!-- Image Display Container 3 -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+          <img id="image1-3" src="" alt="Keyframe 1">
+          <img id="image2-3" src="" alt="Keyframe 2">
+          <img id="image3-3" src="" alt="Keyframe 3">
+      </div>
+    </div>
+
+    <!-- Task Name Display Container 3 -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+          <p id="task-name-3"></p>
+      </div>
+    </div>
+
+    <!-- JavaScript for the Visualization -->
+    <script>
+      var tsneResults3, taskIds3, skillIds3, colors3;
+      var taskFolders3 = [
+        'libero_kitchen/KITCHEN_SCENE10_close_the_top_drawer_of_the_cabinet_demo', 
+        'libero_kitchen/KITCHEN_SCENE10_close_the_top_drawer_of_the_cabinet_and_put_the_black_bowl_on_top_of_it_demo', 
+        'libero_kitchen/KITCHEN_SCENE10_put_the_black_bowl_in_the_top_drawer_of_the_cabinet_demo', 
+        'libero_kitchen/KITCHEN_SCENE1_open_the_bottom_drawer_of_the_cabinet_demo', 
+        'libero_kitchen/KITCHEN_SCENE1_open_the_top_drawer_of_the_cabinet_demo', 
+        'libero_kitchen/KITCHEN_SCENE2_open_the_top_drawer_of_the_cabinet_demo', 
+        'libero_kitchen/KITCHEN_SCENE2_put_the_black_bowl_at_the_back_on_the_plate_demo', 
+        'libero_kitchen/KITCHEN_SCENE2_put_the_black_bowl_at_the_front_on_the_plate_demo', 
+        'libero_kitchen/KITCHEN_SCENE3_put_the_frying_pan_on_the_stove_demo', 
+        'libero_kitchen/KITCHEN_SCENE3_put_the_moka_pot_on_the_stove_demo', 
+        'libero_kitchen/KITCHEN_SCENE3_turn_on_the_stove_demo', 
+        'libero_kitchen/KITCHEN_SCENE4_close_the_bottom_drawer_of_the_cabinet_demo', 
+        'libero_kitchen/KITCHEN_SCENE4_close_the_bottom_drawer_of_the_cabinet_and_open_the_top_drawer_demo', 
+        'libero_kitchen/KITCHEN_SCENE4_put_the_black_bowl_in_the_bottom_drawer_of_the_cabinet_demo', 
+        'libero_kitchen/KITCHEN_SCENE5_close_the_top_drawer_of_the_cabinet_demo', 
+        'libero_kitchen/KITCHEN_SCENE5_put_the_black_bowl_in_the_top_drawer_of_the_cabinet_demo', 
+        'libero_kitchen/KITCHEN_SCENE5_put_the_black_bowl_on_the_plate_demo', 
+        'libero_kitchen/KITCHEN_SCENE6_close_the_microwave_demo', 
+        'libero_kitchen/KITCHEN_SCENE7_open_the_microwave_demo', 
+        'libero_kitchen/KITCHEN_SCENE7_put_the_white_bowl_on_the_plate_demo', 
+        'libero_kitchen/KITCHEN_SCENE8_put_the_right_moka_pot_on_the_stove_demo', 
+        'libero_kitchen/KITCHEN_SCENE9_put_the_frying_pan_on_the_cabinet_shelf_demo', 
+        'libero_kitchen/KITCHEN_SCENE9_put_the_frying_pan_on_top_of_the_cabinet_demo', 
+        'libero_kitchen/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_demo', 
+        'libero_kitchen/KITCHEN_SCENE4_put_the_black_bowl_in_the_bottom_drawer_of_the_cabinet_and_close_it_demo', 
+        'libero_kitchen/KITCHEN_SCENE10_put_the_butter_at_the_back_in_the_top_drawer_of_the_cabinet_and_close_it_demo', 
+        'libero_kitchen/KITCHEN_SCENE10_put_the_butter_at_the_front_in_the_top_drawer_of_the_cabinet_and_close_it_demo', 
+        'libero_kitchen/KITCHEN_SCENE10_put_the_chocolate_pudding_in_the_top_drawer_of_the_cabinet_and_close_it_demo', 
+        'libero_kitchen/KITCHEN_SCENE1_open_the_top_drawer_of_the_cabinet_and_put_the_bowl_in_it_demo', 
+        'libero_kitchen/KITCHEN_SCENE1_put_the_black_bowl_on_the_plate_demo', 
+        'libero_kitchen/KITCHEN_SCENE1_put_the_black_bowl_on_top_of_the_cabinet_demo', 
+        'libero_kitchen/KITCHEN_SCENE2_put_the_middle_black_bowl_on_the_plate_demo', 
+        'libero_kitchen/KITCHEN_SCENE2_put_the_middle_black_bowl_on_top_of_the_cabinet_demo', 
+        'libero_kitchen/KITCHEN_SCENE2_stack_the_black_bowl_at_the_front_on_the_black_bowl_in_the_middle_demo', 
+        'libero_kitchen/KITCHEN_SCENE2_stack_the_middle_black_bowl_on_the_back_black_bowl_demo', 
+        'libero_kitchen/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_frying_pan_on_it_demo', 
+        'libero_kitchen/KITCHEN_SCENE4_put_the_black_bowl_on_top_of_the_cabinet_demo', 
+        'libero_kitchen/KITCHEN_SCENE4_put_the_wine_bottle_in_the_bottom_drawer_of_the_cabinet_demo', 
+        'libero_kitchen/KITCHEN_SCENE4_put_the_wine_bottle_on_the_wine_rack_demo', 
+        'libero_kitchen/KITCHEN_SCENE5_put_the_black_bowl_on_top_of_the_cabinet_demo', 
+        'libero_kitchen/KITCHEN_SCENE5_put_the_ketchup_in_the_top_drawer_of_the_cabinet_demo', 
+        'libero_kitchen/KITCHEN_SCENE6_put_the_yellow_and_white_mug_to_the_front_of_the_white_mug_demo', 
+        'libero_kitchen/KITCHEN_SCENE7_put_the_white_bowl_to_the_right_of_the_plate_demo', 
+        'libero_kitchen/KITCHEN_SCENE8_turn_off_the_stove_demo', 
+        'libero_kitchen/KITCHEN_SCENE9_put_the_frying_pan_under_the_cabinet_shelf_demo', 
+        'libero_kitchen/KITCHEN_SCENE9_put_the_white_bowl_on_top_of_the_cabinet_demo', 
+        'libero_kitchen/KITCHEN_SCENE9_turn_on_the_stove_demo', 
+        'libero_kitchen/KITCHEN_SCENE9_turn_on_the_stove_and_put_the_frying_pan_on_it_demo', 
+        'libero_kitchen/KITCHEN_SCENE8_put_both_moka_pots_on_the_stove_demo', 
+        'libero_kitchen/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_demo'
+      ]
+  
+      function updatePlot3(selectedNumTasks) {
+        // Filter points based on selectedNumTasks
+        var filteredIndices3 = taskIds3.map((taskId, index) => taskId < selectedNumTasks ? index : -1).filter(index => index != -1);
+        var filteredTsneResults3 = filteredIndices3.map(index => tsneResults3[index]);
+        var filteredTaskIds3 = filteredIndices3.map(index => taskIds3[index]);
+        var filteredSkillIds3 = filteredIndices3.map(index => skillIds3[index]);
+        var highlightCurrent3 = document.getElementById('highlight-toggle-3').checked;
+
+        var markerSizes3 = filteredTaskIds3.map(taskId => taskId === selectedNumTasks ? 9 : 6);
+        var markerOpacities3, markerLines3;
+
+        if (highlightCurrent3 && selectedNumTasks != 25) {
+            markerOpacities3 = [];
+            markerLines3 = [];
+            for (let taskId of filteredTaskIds3) {
+                if (taskId + 1 < selectedNumTasks) {
+                    markerOpacities3.push(0.2); 
+                    markerLines3.push({color: 'transparent', width: 0}); 
+                } else if (taskId + 1 == selectedNumTasks) {
+                    markerOpacities3.push(1.0);
+                    markerLines3.push({color: 'transparent', width: 0}); 
+                } else {
+                    markerOpacities3.push(1.0);
+                    markerLines3.push({color: 'transparent', width: 0}); 
+                }
+            }
+        } else {
+            markerOpacities3 = filteredTaskIds3.map(() => 1.0);
+            markerLines3 = filteredTaskIds3.map(() => ({color: 'transparent', width: 0})); 
+        }
+
+        var data3 = [{
+            x: filteredTsneResults3.map(point => point[0]),
+            y: filteredTsneResults3.map(point => point[1]),
+            mode: 'markers',
+            type: 'scatter',
+            hoverinfo: 'text',
+            text: filteredTaskIds3.map((taskId, index) => `Task ID: ${taskId}, Skill ID: ${filteredSkillIds3[index]}`),
+            marker: {
+                size: markerSizes3,
+                color: filteredSkillIds3.map(skillId => colors3[skillId]),
+                opacity: markerOpacities3,
+                line: markerLines3
+            }
+        }];
+
+        var layout3 = {
+            title: 'T-SNE Visualization for the feature space of temporal segments',
+            xaxis: { 
+                range: [-80, 80],
+                showgrid: false,  
+                zeroline: false, 
+                showticklabels: false,  
+                showline: false  
+            },
+            yaxis: {
+                range: [-80, 80],
+                showgrid: false,
+                zeroline: false,
+                showticklabels: false,
+                showline: false
+            },
+            showlegend: false, 
+            shapes: [{
+                type: 'circle',
+                x0: -80,
+                y0: -80,
+                x1: 80,
+                y1: 80,
+                fillcolor: 'rgba(192,192,192,0.2)', 
+                line: {
+                    color: 'rgba(0,0,0,0)' 
+                }
+            }]
+        };
+
+        Plotly.newPlot('plotly-div-3', data3, layout3);
+
+        document.getElementById('plotly-div-3').on('plotly_hover', function(data) {
+            var point = data.points[0];
+            var taskId = taskIds3[point.pointNumber];
+            var demoIndex = demoIndices3[point.pointNumber];
+            var start = segStart3[point.pointNumber];
+            var end = segEnd3[point.pointNumber];
+
+            var taskFolder3 = taskFolders3[taskId];
+            var taskName3 = "Task name: " + taskFolder3.split("/")[1].replace(/_/g, " ").replace("demo", "").trim();
+            document.getElementById('task-name-3').innerText = taskName3;
+
+            var imagePath1 = `./static/data/${taskFolder3}/demo_${demoIndex}/${start}.png`;
+            var imagePath2 = `./static/data/${taskFolder3}/demo_${demoIndex}/${start + Math.floor((end - start) / 2)}.png`;
+            var imagePath3 = `./static/data/${taskFolder3}/demo_${demoIndex}/${end-1}.png`;
+
+            document.getElementById('image1-3').src = imagePath1;
+            document.getElementById('image2-3').src = imagePath2;
+            document.getElementById('image3-3').src = imagePath3;
+        });
+    }
+
+      // Initialize the noUiSlider for the second visualization
+      var slider3 = document.getElementById('tasks-slider-3');
+      noUiSlider.create(slider3, {
+          start: [25],
+          step: 1,
+          range: {
+              'min': [25],
+              'max': [50]
+          },
+          pips: {
+              mode: 'range',
+              density: 10
+          }
+      });
+
+      // Display the initial slider value for the second visualization
+      document.getElementById('slider-value-current-3').innerText = slider3.noUiSlider.get();
+
+      // Update the displayed slider value on change for the second visualization
+      slider3.noUiSlider.on('update', function(values, handle) {
+          document.getElementById('slider-value-current-3').innerText = Math.round(values[handle]);
+      });
+
+      // Update the plot when the slider value changes for the second visualization
+      slider3.noUiSlider.on('set', function(values) {
+          updatePlot3(parseInt(values[0]));
+      });
+
+      loadJSON('./static/data/libero_kitchen/cluster_data.json', function(visualizationData3) {
+          // Extracting necessary data
+          tsneResults3 = visualizationData3.tsne_results;
+          taskIds3 = visualizationData3.task_ids;
+          skillIds3 = visualizationData3.skill_ids;
+          demoIndices3 = visualizationData3.demo_indices;
+          segStart3 = visualizationData3.seg_start;
+          segEnd3 = visualizationData3.seg_end;
+          colors3 = visualizationData3.colors;
+
+          // Initial visualization with the default value of the slider for the second visualization
+          updatePlot3(25);
+
+          // Add event listener to slider for the second visualization
+          document.getElementById("tasks-slider-3").addEventListener("input", function() {
+              var selectedNumTasks = this.value;
+              updatePlot3(selectedNumTasks);
+          });
+
+          // Add interactivity for clicking for the second visualization
+          document.getElementById('plotly-div-3').on('plotly_click', function(data) {
+              var point = data.points[0];
+              var x = point.x;
+              var y = point.y;
+              var taskId = taskIds3[point.pointNumber];
+              var skillId = skillIds3[point.pointNumber];
+
+              console.log(`Clicked on point (${x}, ${y}) with Task ID: ${taskId} and Skill ID: ${skillId}`);
+          });
+
+          // Add interactivity for hovering for the second visualization
+          document.getElementById('plotly-div-3').on('plotly_hover', function(data) {
+              var point = data.points[0];
+              var taskId = taskIds3[point.pointNumber];
+              var demoIndex = demoIndices3[point.pointNumber];
+              var start = segStart3[point.pointNumber];
+              var end = segEnd3[point.pointNumber];
+
+              var taskFolder3 = taskFolders3[taskId];
+
+              var imagePath1 = `./static/data/${taskFolder3}/demo_${demoIndex}/${start}.png`;
+              var imagePath2 = `./static/data/${taskFolder3}/demo_${demoIndex}/${start + Math.floor((end - start) / 2)}.png`;
+              var imagePath3 = `./static/data/${taskFolder3}/demo_${demoIndex}/${end-1}.png`;
+
+              document.getElementById('image1-3').src = imagePath1;
+              document.getElementById('image2-3').src = imagePath2;
+              document.getElementById('image3-3').src = imagePath3;
+          });
+
+          document.getElementById('highlight-toggle-3').addEventListener('change', function() {
+              var selectedNumTasks = parseInt(slider3.noUiSlider.get());
+              updatePlot3(selectedNumTasks);
+          });
+
+      });
+
+
+    </script>
+  
+  </div>
+</section>
+
+
+
+<!-- <hr>
+<br>
+<br> -->
+
+<!-- <section class="section">
+  <div id="real-robot-results-div">
+  </div>
+  <h3 style="text-align: center!important;" class="title is-5">Success rates (%) of GROOT in real robot tasks.</h3>
+</section> -->
+
+<!-- <br>
+
+<hr>
+<br>
+<br> -->
+
+<!-- <section class="section">
+  <div class="container is-max-desktop">
+
+    <div class="columns is-centered">
+
+      <div class="column">
+        <div class="content">
+          <h2 class="title is-3">TITLE</h2>
+          <p>
+           CONTENT.
+          </p>
+          <video id="dollyzoom" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/dollyzoom-stacked.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+      </div>
+
+      <div class="column">
+        <h2 class="title is-3">TITLE</h2>
+        <div class="columns is-centered">
+          <div class="column content">
+            <p>
+            CONTENT.
+            </p>
+            <video id="matting-video" controls playsinline height="100%">
+              <source src="./static/videos/nullmp4"
+                      type="video/mp4">
+            </video>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Model Visualization</h2>
+
+        <h3 class="title is-4">XXX</h3>
+        <div class="content has-text-justified">
+          <p>
+            XXXXXXXXXXXXXXXXXXXXXX.
+          </p>
+        </div>
+
+        <div class="columns is-centered">
+          <div class="column">
+            <div id="canvas-container">
+              <canvas id="image-canvas" width="480" height="480"></canvas>
+              <canvas id="mask-canvas" width="480" height="480"></canvas>
+            </div>
+          </div>
+          <div class="column">
+            <div id="canvas-container">
+              <canvas id="dino-image-canvas" width="480" height="480"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <br>
+
+        <div class="columns is-vcentered interpolation-panel">
+          <div class="column is-3 has-text-centered">
+            <img src="./static/images/XX.jpg"
+                 class="interpolation-image"
+                 alt="Interpolate start reference image."/>
+            <p>Start Frame</p>
+          </div>
+          <div class="column interpolation-video-column">
+            <div id="interpolation-image-wrapper">
+              Loading...
+            </div>
+            <input class="slider is-fullwidth is-large is-info"
+                   id="interpolation-slider"
+                   step="1" min="0" max="100" value="0" type="range">
+          </div>
+          <div class="column is-3 has-text-centered">
+            <img src="./static/images/XX.jpg"
+                 class="interpolation-image"
+                 alt="Interpolation end reference image."/>
+            <p class="is-bold">End Frame</p>
+          </div>
+        </div>
+        <br/>
+
+      </div>
+    </div>
+</section> -->
+
+<!-- <br>
+<hr>
+<br> -->
+
+<!-- Carousel Video of Failure Rollouts. -->
+<!-- <section class="hero is-small">
+  <div class="hero-body">
+
+    <div class="container is-max-desktop">
+
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Failure Example</h2>
+          <p> Some explanation. </p>
+        </div>
+      </div>
+    </div>
+    <br>
+    <div class="container">
+      {% assign num_videos = site.data.failure_video | size %}
+      
+      {% if num_videos > 3 %}
+      
+        <div id="failure-carousel" class="carousel failure-carousel">
+          {% for video in site.data.failure_video %}
+              <div class="{{ video.class }}">
+                  <video poster="" id="{{ video.id }}" autoplay controls muted loop playsinline height="100%">
+                  <source src="{{ video.src }}"
+                          type="{{ video.type }}">
+                  </video>
+              </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="video-container" style="display: flex; justify-content: center;">
+          {% for video in site.data.failure_video %}
+              <div class="{{ video.class }}" style="margin: 0 5px;">
+                  <video poster="" id="{{ video.id }}" autoplay controls muted loop playsinline height="100%">
+                  <source src="{{ video.src }}"
+                          type="{{ video.type }}">
+                  </video>
+              </div>
+          {% endfor %}
+        </div>
+
+      {% endif %}
+      
+    </div>
+  </div>
+</section> -->
+<!-- / Carousel Video of Failure Rollouts. -->
+
+<!-- <br><hr><br> -->
+<!-- <section class="section">
+  <div class="container is-max-desktop">
+    <a href="#" class="toggleButton" id="toggleButton-Pick-Place-Mug">Put the mug on the coaster ▼</a>
+    <div class="toggleContent" id="toggleContent-Pick-Place-Mug">
+      <div class="example-slick">
+        {% for video in site.data.carousel_video_example %}
+              <div class="{{ video.class }} is-centered">
+                  <div class="caption"> {{ video.caption }} </div>
+                  <video poster="" id="{{ video.id }}" autoplay controls muted loop playsinline height="100%">
+                  <source src="{{ video.src }}"
+                          type="{{ video.type }}">
+                  </video>            
+                  <br>
+              </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section> -->
+<!-- <br><hr><br> -->
+<!-- <section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@article{park2021nerfies,
+  author    = {Park, Keunhong and Sinha, Utkarsh and Barron, Jonathan T. and Bouaziz, Sofien and Goldman, Dan B and Seitz, Steven M. and Martin-Brualla, Ricardo},
+  title     = {Nerfies: Deformable Neural Radiance Fields},
+  journal   = {ICCV},
+  year      = {2021},
+}</code></pre>
+  </div>
+</section> -->
+
+  <!-- <div class="navbar-item has-dropdown is-hoverable">
+    <a class="navbar-link">
+      More Research
+    </a>
+    <div class="navbar-dropdown">
+      <a class="navbar-item" href="https://ut-austin-rpl.github.io/VIOLA/">
+        VIOLA
+      </a>
+      <a class="navbar-item" href="https://ut-austin-rpl.github.io/rpl-BUDS/">
+        BUDS
+      </a>
+    </div>
+  </div>
+</div> -->
+
+<footer class="footer">
+  <div class="container">
+
+    <div class="container is-max-desktop">
+      <!-- Method Overview. -->
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Acknowledgment</h2>
+          <div class="content has-text-justified">
+            This work has taken place in the Robot Perception and Learning Group (RPL) at UT Austin. RPL research has been partially supported by the National Science Foundation (CNS-1955523, FRR-2145283), the Office of Naval Research (N00014-22-1-2204), UT Good Systems, and the Machine Learning Laboratory.
+          </div>
+        </div>
+      </div>
+  </div>
+</footer>
+</body>
+</html>

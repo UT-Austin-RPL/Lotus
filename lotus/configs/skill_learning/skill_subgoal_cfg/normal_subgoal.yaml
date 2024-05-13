@@ -1,8 +1,0 @@
-subgoal_type: "linear"
-horizon: 30
-visual_feature_dimension: 32
-use_eye_in_hand: false
-use_spatial_softmax: true
-
-
-use_final_goal: false

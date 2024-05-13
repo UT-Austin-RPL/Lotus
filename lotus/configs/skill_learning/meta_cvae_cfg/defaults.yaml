@@ -1,4 +1,0 @@
-enable: true
-kl_coeff: 0.01
-latent_dim: 64
-

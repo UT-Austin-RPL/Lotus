@@ -1,4 +1,0 @@
-modalities: ["agentview", "eye_in_hand", "proprio"]
-no_skip: true
-z_dim: 32
-alpha_kl: 0.05
