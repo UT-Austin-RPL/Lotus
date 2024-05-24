@@ -2,6 +2,7 @@
 .hydra
 *pyc
 datasets
+!lotus/skill_learning/dinov2/dinov2/data/datasets/
 results
 outputs
 /MUJOCO_LOG.TXT
