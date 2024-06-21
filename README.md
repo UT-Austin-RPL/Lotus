@@ -124,7 +124,7 @@ For hierarchical skill-based policy training from scratch, run the following:
 ```shell
 export CUDA_VISIBLE_DEVICES=GPU_ID && \
 export MUJOCO_EGL_DEVICE_ID=GPU_ID && \
-python lotus/lifelong/main_old.py seed=SEED \
+python lotus/lifelong/main.py seed=SEED \
                                benchmark_name=BENCHMARK \
                                policy=bc_transformer_policy \
                                lifelong=multitask_skill \
@@ -136,7 +136,7 @@ For hierarchical skill-based policy finetuning, run the following:
 ```shell
 export CUDA_VISIBLE_DEVICES=GPU_ID && \
 export MUJOCO_EGL_DEVICE_ID=GPU_ID && \
-python lotus/lifelong/main_old.py seed=SEED \
+python lotus/lifelong/main.py seed=SEED \
                                benchmark_name=BENCHMARK \
                                policy=bc_transformer_policy \
                                lifelong=multitask_skill \
